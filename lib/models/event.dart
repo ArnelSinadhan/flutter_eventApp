@@ -1,62 +1,22 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
+@HiveType(typeId: 1)
 class Event {
-  String title;
-  String content;
-  DateTime startDate;
-  DateTime endDate;
+  @HiveField(0)
+  final String eventTitle;
 
-  Event({
-    required this.title,
-    required this.content,
-    required this.startDate,
-    required this.endDate,
-  });
+  @HiveField(1)
+  final String description;
 
-  // Convert Event object to a map
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'content': content,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-    };
-  }
+  @HiveField(2)
+  final DateTime startDate;
 
-  // Convert map to Event object
-  factory Event.fromMap(Map<String, dynamic> map) {
-    return Event(
-      title: map['title'],
-      content: map['content'],
-      startDate: DateTime.parse(map['startDate']),
-      endDate: DateTime.parse(map['endDate']),
-    );
-  }
-}
+  @HiveField(3)
+  final DateTime endDate;
 
-class EventStorage {
-  static const String _eventListKey = 'eventList';
-
-  // Save the event list to local storage
-  Future<void> saveEventList(List<Event> eventList) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> eventListJson =
-        eventList.map((event) => jsonEncode(event.toMap())).toList();
-    await prefs.setStringList(_eventListKey, eventListJson);
-  }
-
-  // Retrieve the event list from local storage
-  Future<List<Event>> getEventList() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? eventListJson = prefs.getStringList(_eventListKey);
-
-    if (eventListJson != null) {
-      return eventListJson
-          .map((eventJson) => Event.fromMap(jsonDecode(eventJson)))
-          .toList();
-    } else {
-      return [];
-    }
-  }
+  Event(
+      {required this.eventTitle,
+      required this.description,
+      required this.startDate,
+      required this.endDate});
 }

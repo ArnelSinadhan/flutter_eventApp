@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eventapp/models/event.dart';
 import 'package:intl/intl.dart';
 
 class AddEvent extends StatefulWidget {
@@ -10,7 +11,8 @@ class AddEvent extends StatefulWidget {
 
 class _AddEventState extends State<AddEvent> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  String _eventTitle = '';
+  String _description = '';
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -47,6 +49,19 @@ class _AddEventState extends State<AddEvent> {
     }
   }
 
+  // Function to save the event
+  void _savedEvent() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final Event newEvent = Event(
+          eventTitle: _eventTitle,
+          description: _description,
+          startDate: _startDate!,
+          endDate: _endDate!);
+    }
+    Navigator.of(context).pop(newEvent);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +76,15 @@ class _AddEventState extends State<AddEvent> {
               Container(
                 margin: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter event title';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _eventTitle = value!;
+                  },
                   decoration: const InputDecoration(
                       labelText: 'Event Title',
                       filled: true,
@@ -71,6 +95,9 @@ class _AddEventState extends State<AddEvent> {
               Container(
                 margin: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
                 child: TextFormField(
+                  onSaved: (value) {
+                    _description = value!;
+                  },
                   decoration: const InputDecoration(
                       labelText: 'Description',
                       filled: true,
@@ -144,7 +171,9 @@ class _AddEventState extends State<AddEvent> {
                 height: 20.0,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _savedEvent();
+                },
                 style: TextButton.styleFrom(foregroundColor: Colors.green),
                 child: const Text('Add Event'),
               )
