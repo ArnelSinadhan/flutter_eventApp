@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eventapp/models/event.dart';
 import 'package:flutter_eventapp/screens/add_event.dart';
 import 'package:flutter_eventapp/screens/event_list.dart';
+import 'package:hive/hive.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,6 +12,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final eventBox = Hive.box<Event>('events');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,11 +21,11 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         title: const Text('Event App'),
       ),
-      body: EventList(),
+      body: const EventList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return AddEvent();
+            return const AddEvent();
           }));
         },
         child: const Icon(Icons.add),

@@ -1,6 +1,8 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+part "event.g.dart";
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 0)
 class Event {
   @HiveField(0)
   final String eventTitle;
